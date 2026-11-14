@@ -1,0 +1,325 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Design axes: each file redefines semantic tokens for one data-<axis> value on <html>. */
+@import "../styles/design/shape.css";
+@import "../styles/design/buttons.css";
+@import "../styles/design/surface.css";
+@import "../styles/design/type.css";
+@import "../styles/design/density.css";
+@import "../styles/design/accent.css";
+@import "../styles/design/layout.css";
+@import "../styles/design/nav.css";
+
+/* Dark only: the html element always carries .dark, so shadcn's dark: classes apply. */
+@custom-variant dark (&:is(.dark *));
+
+/* Structural variants, for the rare component that must change with the layout or nav axis:
+   `layout-bento:grid-cols-4`, `nav-sidebar:lg:pl-64`. */
+@custom-variant layout-split (&:where([data-layout="split"] *));
+@custom-variant layout-centered (&:where([data-layout="centered"] *));
+@custom-variant layout-editorial (&:where([data-layout="editorial"] *));
+@custom-variant layout-bento (&:where([data-layout="bento"] *));
+@custom-variant nav-bar (&:where([data-nav="bar"] *));
+@custom-variant nav-floating (&:where([data-nav="floating"] *));
+@custom-variant nav-sidebar (&:where([data-nav="sidebar"] *));
+
+/* ------------------------------------------------------------------------------------------
+   1. Brand palette (raw). Chi Tech CLLCT colours from the summit portal. Components never use
+      these directly: they use the semantic tokens below.
+   ------------------------------------------------------------------------------------------ */
+:root {
+  --brand-deep: #000000;
+  --brand-paper: #0b0c0e;
+  --brand-card: #191c21;
+  --brand-panel: #252a31;
+  --brand-ink: #f3f1ec;
+  --brand-muted: #a9b1ba;
+
+  --brand-orange: #e08c47;
+  --brand-teal: #7ecac6;
+  --brand-green: #3fbf8c;
+  --brand-yellow: #f2c272;
+  --brand-on-fill: #101820;
+
+  --brand-orange-text: #eea066;
+  --brand-teal-text: #8fd6d2;
+  --brand-green-text: #6fd3a6;
+  --brand-yellow-text: #f2c272;
+  --brand-danger: #ff8f80;
+
+  --brand-tint-orange: rgb(224 140 71 / 0.16);
+  --brand-tint-teal: rgb(126 202 198 / 0.14);
+  --brand-tint-green: rgb(63 191 140 / 0.16);
+  --brand-tint-yellow: rgb(242 194 114 / 0.16);
+  --brand-tint-danger: rgb(255 143 128 / 0.16);
+
+  --brand-line: #2b3038;
+  --brand-edge: #3f464f;
+  --brand-edge-strong: #5a626c;
+  --brand-edge-control: #7f8792;
+  --brand-focus: #7ecac6;
+}
+
+/* ------------------------------------------------------------------------------------------
+   2. Semantic tokens (shadcn names). Defaults below equal the "summit" preset; the files in
+      styles/design/ override them per axis option.
+   ------------------------------------------------------------------------------------------ */
+:root {
+  color-scheme: dark;
+
+  --background: var(--brand-paper);
+  --foreground: var(--brand-ink);
+  --card: var(--brand-card);
+  --card-foreground: var(--brand-ink);
+  --popover: var(--brand-card);
+  --popover-foreground: var(--brand-ink);
+  --secondary: var(--brand-panel);
+  --secondary-foreground: var(--brand-ink);
+  --muted: var(--brand-panel);
+  --muted-foreground: var(--brand-muted);
+  --accent: var(--brand-panel);
+  --accent-foreground: var(--brand-ink);
+  --destructive: var(--brand-danger);
+  --destructive-foreground: var(--brand-on-fill);
+  --success: var(--brand-green-text);
+  --success-foreground: var(--brand-on-fill);
+  --warning: var(--brand-yellow-text);
+  --warning-foreground: var(--brand-on-fill);
+  --border: var(--brand-edge);
+  --input: var(--brand-edge-control);
+  --ring: var(--brand-focus);
+  --chart-1: var(--brand-orange);
+  --chart-2: var(--brand-teal);
+  --chart-3: var(--brand-green);
+  --chart-4: var(--brand-yellow);
+  --chart-5: var(--brand-muted);
+
+  /* accent axis (accent.css) */
+  --primary: var(--brand-orange);
+  --primary-foreground: var(--brand-on-fill);
+  --primary-text: var(--brand-orange-text);
+  --primary-tint: var(--brand-tint-orange);
+  --primary-shadow: var(--brand-teal);
+
+  /* shape axis (shape.css) */
+  --radius: 0.75rem;
+  --shape-control: 0.75rem;
+  --shape-field: 0.75rem;
+  --shape-card: 1.25rem;
+  --shape-badge: 999px;
+  --shape-avatar: 999px;
+
+  /* density axis (density.css) */
+  --control-h: 2.75rem;
+  --control-h-sm: 2.25rem;
+  --control-h-lg: 3.25rem;
+  --control-px: 1.25rem;
+  --space-section: 6rem;
+  --space-card: 1.5rem;
+  --space-stack: 1.25rem;
+  --section-scale: 1;
+
+  /* layout axis (layout.css) */
+  --container-max: 72rem;
+
+  /* page background decoration (surface.css: glass adds a glow) */
+  --page-glow: none;
+}
+
+@media (max-width: 47.99rem) {
+  :root {
+    --section-scale: 0.6;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------
+   3. Tailwind theme: every semantic token becomes a utility (bg-primary, rounded-card,
+      h-control, p-card, py-section, max-w-page, font-heading ...).
+   ------------------------------------------------------------------------------------------ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-text: var(--primary-text);
+  --color-primary-tint: var(--primary-tint);
+  --color-primary-shadow: var(--primary-shadow);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-heading-family);
+  --font-mono: var(--font-code);
+
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-2xl: calc(var(--radius) * 2);
+  --radius-3xl: calc(var(--radius) * 2.5);
+  --radius-4xl: calc(var(--radius) * 3);
+  --radius-control: var(--shape-control);
+  --radius-field: var(--shape-field);
+  --radius-card: var(--shape-card);
+  --radius-badge: var(--shape-badge);
+  --radius-avatar: var(--shape-avatar);
+
+  --spacing-control: var(--control-h);
+  --spacing-control-sm: var(--control-h-sm);
+  --spacing-control-lg: var(--control-h-lg);
+  --spacing-control-x: var(--control-px);
+  --spacing-card: var(--space-card);
+  --spacing-stack: var(--space-stack);
+  --spacing-section: calc(var(--space-section) * var(--section-scale));
+
+  --container-page: var(--container-max);
+}
+
+/* ------------------------------------------------------------------------------------------
+   4. Shared utilities kits may use.
+   ------------------------------------------------------------------------------------------ */
+
+/* Mono label with the orange bar: <p className="eyebrow">Kits</p> */
+@utility eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: var(--font-code);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  &::before {
+    content: "";
+    width: 1.5rem;
+    height: 3px;
+    flex: none;
+    background: var(--primary);
+  }
+}
+
+/* The card/panel treatment for the current surface option. */
+@utility surface {
+  background: var(--surface-bg);
+  border: var(--surface-border-width) solid var(--surface-border-color);
+  box-shadow: var(--surface-shadow);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
+}
+
+/* Hero-sized heading. */
+@utility text-display {
+  font-size: clamp(2.5rem, 7vw, 5.25rem);
+  line-height: var(--heading-leading);
+}
+
+/* Button character for the current buttons option (applied by components/ui/button.tsx). */
+@utility btn {
+  font-family: var(--btn-font);
+  font-weight: var(--btn-weight);
+  text-transform: var(--btn-transform);
+  letter-spacing: var(--btn-tracking);
+  border-width: var(--btn-border-width);
+  transition-property: translate, box-shadow, background, color, border-color;
+  transition-duration: 160ms;
+}
+@utility btn-primary {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border-color: var(--btn-border);
+  box-shadow: var(--btn-shadow);
+  &:hover:not(:disabled) {
+    background: var(--btn-bg-hover);
+    box-shadow: var(--btn-shadow-hover);
+    translate: var(--btn-hover-translate);
+  }
+  &:active:not(:disabled) {
+    box-shadow: var(--btn-shadow-active);
+    translate: var(--btn-active-translate);
+  }
+}
+@utility btn-alt {
+  box-shadow: var(--btn-alt-shadow);
+  &:hover:not(:disabled) {
+    box-shadow: var(--btn-alt-shadow-hover);
+    translate: var(--btn-alt-hover-translate);
+  }
+  &:active:not(:disabled) {
+    box-shadow: none;
+    translate: 0 0;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------
+   5. Base.
+   ------------------------------------------------------------------------------------------ */
+@layer base {
+  * {
+    @apply border-border outline-ring;
+  }
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    background-image: var(--page-glow);
+    background-attachment: fixed;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading-family);
+    font-weight: var(--heading-weight);
+    letter-spacing: var(--heading-tracking);
+    text-transform: var(--heading-transform);
+    line-height: var(--heading-leading);
+    text-wrap: balance;
+  }
+  h1 em,
+  h2 em {
+    font-style: var(--heading-em-style);
+    color: var(--primary-text);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  a {
+    text-underline-offset: 0.2em;
+  }
+}

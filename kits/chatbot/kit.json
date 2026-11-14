@@ -1,0 +1,21 @@
+{
+  "name": "chatbot",
+  "title": "Chatbot",
+  "description": "A /chat page with streaming Claude replies. Runs in demo mode (canned replies) until you add your own Anthropic API key.",
+  "dependencies": { "@anthropic-ai/sdk": "^1.8.0" },
+  "devDependencies": {},
+  "env": [
+    {
+      "name": "ANTHROPIC_API_KEY",
+      "example": "",
+      "comment": "Chatbot kit: your team's OWN Anthropic API key (platform.claude.com > API keys). Server-only.\nEmpty = demo mode with canned replies. Put the real key in .env.local and your Vercel project, never here."
+    },
+    {
+      "name": "ANTHROPIC_MODEL",
+      "example": "",
+      "comment": "Optional. Claude model id for the chatbot. Empty = claude-opus-5-5."
+    }
+  ],
+  "nav": [{ "label": "Chat", "href": "/chat" }],
+  "next": "Open /chat (it runs in demo mode until you add ANTHROPIC_API_KEY to .env.local). Then edit lib/chatbot/system-prompt.ts to give the bot its job. Read kits/chatbot/README.md before adding a key."
+}

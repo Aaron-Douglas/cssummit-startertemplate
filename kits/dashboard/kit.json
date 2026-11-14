@@ -1,0 +1,10 @@
+{
+  "name": "dashboard",
+  "title": "Dashboard",
+  "description": "An /insights page with stat tiles, charts and a sortable table, all from one sample data file.",
+  "dependencies": { "recharts": "^3.10.1" },
+  "devDependencies": {},
+  "env": [],
+  "nav": [{ "label": "Insights", "href": "/insights" }],
+  "next": "Open /insights, then replace the sample rows in lib/insights/data.ts with your own data. Every tile, chart and table updates from that one file."
+}

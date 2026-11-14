@@ -1,0 +1,62 @@
+/* surface: how cards, panels and popovers sit on the page.
+   Tokens: --surface-bg, --surface-border-width, --surface-border-color, --surface-shadow,
+   --surface-blur (read by the `surface` utility), plus --page-glow behind the page. */
+
+:root,
+:root[data-surface="raised"] {
+  --surface-bg: var(--card);
+  --surface-border-width: 1px;
+  --surface-border-color: var(--border);
+  --surface-shadow:
+    0 18px 48px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.04);
+  --surface-blur: none;
+}
+
+:root[data-surface="flat"] {
+  --card: var(--brand-panel);
+  --popover: var(--brand-panel);
+  --secondary: var(--brand-edge);
+  --muted: var(--brand-card);
+  --accent: var(--brand-edge);
+  --surface-bg: var(--card);
+  --surface-border-width: 0px;
+  --surface-border-color: transparent;
+  --surface-shadow: none;
+  --surface-blur: none;
+}
+
+:root[data-surface="bordered"] {
+  --card: var(--brand-paper);
+  --surface-bg: transparent;
+  --surface-border-width: 2px;
+  --surface-border-color: var(--brand-edge-strong);
+  --surface-shadow: none;
+  --surface-blur: none;
+}
+
+:root[data-surface="glass"] {
+  --card: rgb(255 255 255 / 0.05);
+  --popover: var(--brand-card);
+  --surface-bg: rgb(255 255 255 / 0.05);
+  --surface-border-width: 1px;
+  --surface-border-color: rgb(255 255 255 / 0.12);
+  --surface-shadow:
+    0 10px 40px rgb(0 0 0 / 0.35), inset 0 1px 0 rgb(255 255 255 / 0.1);
+  --surface-blur: blur(18px) saturate(140%);
+  --page-glow:
+    radial-gradient(
+      60rem 40rem at 0% -10%,
+      var(--primary-tint),
+      transparent 70%
+    ),
+    radial-gradient(
+      50rem 36rem at 100% 10%,
+      var(--brand-tint-teal),
+      transparent 70%
+    ),
+    radial-gradient(
+      40rem 30rem at 50% 110%,
+      var(--brand-tint-green),
+      transparent 70%
+    );
+}

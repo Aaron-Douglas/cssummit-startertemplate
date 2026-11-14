@@ -1,0 +1,10 @@
+{
+  "name": "learning",
+  "title": "Learning",
+  "description": "Short lessons with quizzes and progress saved in the browser. Lessons are plain TypeScript files.",
+  "dependencies": {},
+  "devDependencies": {},
+  "env": [],
+  "nav": [{ "label": "Learn", "href": "/learn" }],
+  "next": "Copy a file in content/lessons/ to write your own lesson, then add it to content/lessons/index.ts. Delete the sample quantum lessons when you have yours."
+}

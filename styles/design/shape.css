@@ -1,0 +1,40 @@
+/* shape: radius scale for buttons, fields, cards, badges and avatars.
+   Tokens: --radius (base for rounded-sm..4xl), --shape-control, --shape-field, --shape-card,
+   --shape-badge, --shape-avatar. Utilities: rounded-control, rounded-field, rounded-card,
+   rounded-badge, rounded-avatar. */
+
+:root[data-shape="sharp"] {
+  --radius: 0px;
+  --shape-control: 0px;
+  --shape-field: 0px;
+  --shape-card: 0px;
+  --shape-badge: 0px;
+  --shape-avatar: 0px;
+}
+
+:root[data-shape="soft"] {
+  --radius: 0.375rem;
+  --shape-control: 0.375rem;
+  --shape-field: 0.375rem;
+  --shape-card: 0.5rem;
+  --shape-badge: 0.25rem;
+  --shape-avatar: 0.375rem;
+}
+
+:root[data-shape="round"] {
+  --radius: 0.75rem;
+  --shape-control: 0.75rem;
+  --shape-field: 0.75rem;
+  --shape-card: 1.25rem;
+  --shape-badge: 999px;
+  --shape-avatar: 999px;
+}
+
+:root[data-shape="pill"] {
+  --radius: 1.25rem;
+  --shape-control: 999px;
+  --shape-field: 1.25rem;
+  --shape-card: 2rem;
+  --shape-badge: 999px;
+  --shape-avatar: 999px;
+}

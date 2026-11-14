@@ -1,0 +1,28 @@
+/* layout (structural): the hero comes from components/landing/hero/*.tsx and sections adapt
+   with the layout-* variants. This file sets the page width per layout and, when the design
+   switcher renders every hero variant, hides all but the active one.
+   Token: --container-max (utility: max-w-page). */
+
+:root[data-layout="split"] {
+  --container-max: 72rem;
+}
+:root[data-layout="centered"] {
+  --container-max: 60rem;
+}
+:root[data-layout="editorial"] {
+  --container-max: 68rem;
+}
+:root[data-layout="bento"] {
+  --container-max: 80rem;
+}
+
+:root[data-layout="split"]
+  [data-layout-variant]:not([data-layout-variant="split"]),
+:root[data-layout="centered"]
+  [data-layout-variant]:not([data-layout-variant="centered"]),
+:root[data-layout="editorial"]
+  [data-layout-variant]:not([data-layout-variant="editorial"]),
+:root[data-layout="bento"]
+  [data-layout-variant]:not([data-layout-variant="bento"]) {
+  display: none;
+}

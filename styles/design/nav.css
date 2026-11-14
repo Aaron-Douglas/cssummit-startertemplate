@@ -1,0 +1,9 @@
+/* nav (structural): the header comes from components/nav/*.tsx. When the design switcher
+   renders every nav variant, this hides all but the active one. */
+
+:root[data-nav="bar"] [data-nav-variant]:not([data-nav-variant="bar"]),
+:root[data-nav="floating"]
+  [data-nav-variant]:not([data-nav-variant="floating"]),
+:root[data-nav="sidebar"] [data-nav-variant]:not([data-nav-variant="sidebar"]) {
+  display: none;
+}

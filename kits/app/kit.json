@@ -1,0 +1,29 @@
+{
+  "name": "app",
+  "title": "App (sign-in + dashboard)",
+  "description": "Supabase sign-in (email + password, magic link, optional Google), a protected dashboard and a profile page. Demo mode until you connect your own Supabase project.",
+  "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.119.0"
+  },
+  "devDependencies": {},
+  "env": [
+    {
+      "name": "NEXT_PUBLIC_SUPABASE_URL",
+      "example": "",
+      "comment": "Your own Supabase project's URL (Supabase dashboard > Project Settings > API).\nLeave empty for demo mode: sign-in is switched off and /dashboard shows sample data."
+    },
+    {
+      "name": "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+      "example": "",
+      "comment": "Your own project's publishable key (sb_publishable_...). Safe in the browser: Row Level Security protects the data.\nNever put the secret / service-role key here or in any NEXT_PUBLIC_ variable."
+    },
+    {
+      "name": "NEXT_PUBLIC_AUTH_GOOGLE_ENABLED",
+      "example": "",
+      "comment": "Set to true only after enabling the Google provider in Supabase (Authentication > Sign In / Providers)."
+    }
+  ],
+  "nav": [{ "label": "Dashboard", "href": "/dashboard" }],
+  "next": "Runs in demo mode until you connect your own Supabase project: run /setup in Claude Code or follow kits/app/README.md (create the project, add the two keys to .env.local, run supabase/migrations/*_profiles.sql). Then build your feature in app/dashboard/page.tsx."
+}
