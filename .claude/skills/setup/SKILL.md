@@ -1,7 +1,7 @@
 ---
 name: setup
-description: Walk the learner through connecting their OWN accounts - Supabase for the app kit, an Anthropic API key for the chatbot kit, and Vercel for deploying. The learner signs in and pastes secrets themselves; never ask for secrets in chat. Use when a team wants real sign-in, a real chatbot, or a live URL.
-argument-hint: "[supabase | google | anthropic | vercel]"
+description: Walk the learner through connecting their OWN accounts - Supabase for the app kit, an Anthropic API key for the chatbot kit, and Vercel or Cloudflare for deploying. The learner signs in and pastes secrets themselves; never ask for secrets in chat. Use when a team wants real sign-in, a real chatbot, or a live URL.
+argument-hint: "[supabase | google | anthropic | vercel | cloudflare]"
 ---
 
 # Connect your own accounts
@@ -13,7 +13,7 @@ Ground rules for this whole walkthrough:
 - The learner does every sign-in and every paste of a secret. You give the steps and check the result.
 - **Never ask for a key, password or token in chat.** If the learner pastes one anyway, tell them to rotate it and do not repeat it.
 - Never use a project ref, key or account you find elsewhere on this machine.
-- Before anything is created, say what it is and what it costs. Supabase and Vercel free tiers are enough for a hackathon. The Anthropic API is paid per use; the learner should set a low spend limit.
+- Before anything is created, say what it is and what it costs. Supabase, Vercel and Cloudflare free tiers are enough for a hackathon. The Anthropic API is paid per use; the learner should set a low spend limit.
 - If an MCP shows more than one organisation or team, ask which one belongs to the learner.
 
 Check what is installed first: read `kits.installed.json`. Only do the sections that apply. If `$ARGUMENTS` names one section, do just that one.
@@ -48,7 +48,7 @@ The kits' own READMEs are the detailed reference and the learner can follow them
 2. They create a key under **API keys** and paste it into `.env.local` as `ANTHROPIC_API_KEY=...`. It has no `NEXT_PUBLIC_` prefix on purpose: it must stay on the server. `ANTHROPIC_MODEL` is optional (empty uses the kit's default model).
 3. Restart `pnpm dev`, open `/chat` and ask them to send a test message. Without the key the chatbot gives canned replies marked "Demo", which is fine for a demo but must not be presented as the bot's real output. Error messages and fixes are in `kits/chatbot/README.md`.
 
-## C. Deploy to Vercel
+## C. Deploy to Vercel (or Cloudflare)
 
 1. Run `pnpm verify` first. Do not deploy a failing build.
 2. The learner pushes the repo to their own GitHub account. Before they push, check `git status` and `git diff --cached` for secrets. `.env.local` must not be tracked.
@@ -58,6 +58,16 @@ The kits' own READMEs are the detailed reference and the learner can follow them
 5. Open the production URL with them and check the main pages. If they use Supabase auth, add the URL to Supabase Redirect URLs and Site URL (step A5).
 
 `NEXT_PUBLIC_` values are baked in at build time, so after changing one in Vercel the learner must redeploy.
+
+### Or: Cloudflare Workers
+
+If the learner prefers Cloudflare (free plan is enough), follow "Deploy to your own Cloudflare" in `README.md`:
+
+1. `pnpm verify` passes.
+2. The learner runs `pnpm exec wrangler login` themselves and signs in to their **own** account in the browser. Check with `pnpm exec wrangler whoami`; if it lists more than one account, ask which one is theirs. Never run `wrangler login` for them or reuse another account's token.
+3. Set the worker `name` in `wrangler.jsonc` (and the `service` line to the same name), then `pnpm cf:deploy`. Say first that it creates a Worker on their account (free plan).
+4. Server-only keys: the learner runs `pnpm exec wrangler secret put ANTHROPIC_API_KEY` and pastes the value into the prompt themselves. `NEXT_PUBLIC_` values come from `.env.local` at build time, so they rebuild (`pnpm cf:deploy`) after changing one, and set `NEXT_PUBLIC_SITE_URL` to the `workers.dev` URL.
+5. Supabase auth: add the `workers.dev` URL's `/auth/callback` and `/auth/confirm` to Redirect URLs and make it the Site URL (step A5).
 
 ## Finish
 

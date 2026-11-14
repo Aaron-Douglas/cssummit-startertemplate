@@ -1,0 +1,33 @@
+// Cloudflare Workers config, used by `pnpm cf:build`, `pnpm cf:preview` and `pnpm cf:deploy`.
+// The app is built with the OpenNext adapter (@opennextjs/cloudflare, see open-next.config.ts).
+// No account ID and no secrets here: `pnpm exec wrangler login` picks your own account, and
+// server-only values go in with `pnpm exec wrangler secret put <NAME>` (see README.md).
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Your worker's name. It becomes part of the URL: https://<name>.<your-subdomain>.workers.dev
+  "name": "cssummit-starter-template",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  // Minify the worker: keeps the all-kits demo under the free plan's 3 MiB (compressed) limit.
+  "minify": true,
+  "workers_dev": true,
+  "preview_urls": true,
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      // OpenNext calls the worker itself through this binding (caching). Keep "service" equal
+      // to "name" above if you rename the worker.
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "cssummit-starter-template"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+  // Image optimisation is off: next/image serves the original files. To turn it on, add
+  // "images": { "binding": "IMAGES" } (uses Cloudflare Images, which has its own free quota).
+}

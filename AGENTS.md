@@ -30,6 +30,8 @@ Next.js 16 (App Router; `proxy.ts`, not `middleware.ts`), React 19, TypeScript s
 
 Node 22.6 or newer is required (`engines` in `package.json`).
 
+Deploying: Vercel (git import, `pnpm build`) or Cloudflare Workers (`pnpm cf:deploy`, after the learner runs `pnpm exec wrangler login` themselves). The Cloudflare build uses the OpenNext adapter (`wrangler.jsonc`, `open-next.config.ts`, `scripts/cf-build.mjs`) and sets `BUILD_TARGET=cloudflare`, which turns `cacheComponents` off for that build only (OpenNext cannot resume partial prerenders yet; see `next.config.ts`). Keep writing code that passes with `cacheComponents` on. On Cloudflare, server-only secrets go in with `pnpm exec wrangler secret put <NAME>`; `NEXT_PUBLIC_` values are baked in at build time, so rebuild after changing one. `.open-next/` and `.wrangler/` are build output. `.npmrc` sets `node-linker=hoisted` so the Cloudflare build works on Windows; do not remove it.
+
 Skills: `/start` (plan the project), `/design` (change the look), `/setup` (connect the team's own accounts).
 
 ## Structure
@@ -55,7 +57,7 @@ Skills: `/start` (plan the project), `/design` (change the look), `/setup` (conn
 ## Env rules
 
 - Read env vars only through `lib/env.ts`. Every variable must be listed in `.env.example` (names and comments only, never values).
-- Real values live in `.env.local` (git-ignored) and in the team's Vercel project settings.
+- Real values live in `.env.local` (git-ignored) and in the team's Vercel project settings (or, on Cloudflare, `wrangler secret put`).
 - Core needs no env vars. `app` and `chatbot` run in demo mode without theirs.
 - Anything without `NEXT_PUBLIC_` is server-only. A Supabase service-role or secret key must never reach client code.
 - Do not read `.env`, `.env.local` or other secret env files. Ask the learner whether a variable is set instead.
@@ -64,7 +66,7 @@ Skills: `/start` (plan the project), `/design` (change the look), `/setup` (conn
 
 The learner's project runs on the learner's own accounts. Not the organiser's, not a teammate's employer's, not anything else found on this machine.
 
-- The learner signs in to their **own** Supabase, Vercel and Anthropic accounts in their browser or through `/mcp`. You never sign in for them.
+- The learner signs in to their **own** Supabase, Vercel, Cloudflare and Anthropic accounts in their browser or through `/mcp`. You never sign in for them.
 - Never reuse a project ref, URL, key or token found elsewhere on the machine (other repos, global config, shell history, other `.mcp.json` files). If you see one, ignore it.
 - Never create resources (projects, databases, deployments, keys) on an account or organisation the learner does not own. If an MCP shows several organisations, ask which one is theirs.
 - Before creating anything, say what it is and what it costs (free tier or a price), and wait for a yes.
