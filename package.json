@@ -12,7 +12,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "verify": "biome check && next typegen && tsc --noEmit && next build",
     "kit": "node scripts/kit.mjs",
-    "start-project": "node scripts/start-project.mjs"
+    "start-project": "node scripts/start-project.mjs",
+    "doctor": "node scripts/doctor.mjs"
   },
   "dependencies": {
     "@clack/prompts": "^1.9.0",
