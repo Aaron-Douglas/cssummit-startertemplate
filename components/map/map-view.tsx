@@ -181,7 +181,7 @@ export default function MapView({
       <section
         ref={containerRef}
         className="h-full w-full"
-        aria-label="Map of places. Use the list to move between places."
+        aria-label="Map of Chicago neighborhoods. Use the list to move between them."
       />
       <div className="absolute top-3 right-3 z-10 flex flex-col gap-2">
         <Button
@@ -207,38 +207,36 @@ export default function MapView({
 
 /** Popup HTML built with textContent, so text from the data can never inject markup. */
 function popupContent(place: PlaceFeature) {
-  const { name, category, neighborhood, description, hours } = place.properties;
-  const [lng, lat] = place.geometry.coordinates;
+  const {
+    name,
+    category,
+    description,
+    temperature,
+    wind,
+    precipitation,
+    asOf,
+  } = place.properties;
   const root = document.createElement("div");
   root.className = "flex flex-col gap-1.5 text-sm";
 
-  const meta = document.createElement("p");
-  meta.className = "text-xs text-muted-foreground";
-  meta.textContent = `${categoryLabel(category)} · ${neighborhood}`;
+  // Small helper: one <p> with an optional class.
+  const line = (text: string, className = "") => {
+    const p = document.createElement("p");
+    p.className = className;
+    p.textContent = text;
+    return p;
+  };
 
-  const title = document.createElement("p");
-  title.className = "font-heading text-base font-semibold";
-  title.textContent = name;
-
-  const body = document.createElement("p");
-  body.textContent = description;
-
-  root.append(meta, title, body);
-
-  if (hours) {
-    const time = document.createElement("p");
-    time.className = "text-xs text-muted-foreground";
-    time.textContent = hours;
-    root.append(time);
-  }
-
-  const link = document.createElement("a");
-  link.className = "text-primary-text underline underline-offset-4";
-  link.href = `https://www.openstreetmap.org/directions?to=${lat}%2C${lng}`;
-  link.target = "_blank";
-  link.rel = "noopener noreferrer";
-  link.textContent = "Directions (OpenStreetMap)";
-  root.append(link);
+  root.append(
+    line(
+      `${categoryLabel(category)} · ${description}`,
+      "text-xs text-muted-foreground",
+    ),
+    line(name, "font-heading text-base font-semibold"),
+    line(`${temperature}°F · wind ${wind} mph`),
+    line(`Precipitation: ${precipitation.toFixed(2)} in`),
+    line(asOf, "text-xs text-muted-foreground"),
+  );
 
   return root;
 }

@@ -1,12 +1,23 @@
 import { CATEGORIES, type CategoryId } from "./places";
 
 /**
- * Each category gets one of the design system's chart colours (`--chart-1` … `--chart-5`), so
- * markers and filter dots follow the design the team picked.
+ * Each weather condition gets one of the design system's chart colours (`--chart-1` …
+ * `--chart-5`), so markers and filter dots follow the design the team picked.
+ *
+ * There are six conditions but only five chart colours. Fog shares cloudy's colour: both mean
+ * "grey sky, no rain", so they are the closest pair. The label and popup still say "Fog".
  */
+const CHART_SLOT: Record<CategoryId, number> = {
+  clear: 1,
+  cloudy: 2,
+  fog: 2, // same colour as cloudy, see above
+  rain: 3,
+  snow: 4,
+  storm: 5,
+};
+
 export function categoryColor(category: CategoryId) {
-  const index = CATEGORIES.findIndex((item) => item.id === category);
-  return `var(--chart-${(Math.max(index, 0) % 5) + 1})`;
+  return `var(--chart-${CHART_SLOT[category] ?? 2})`;
 }
 
 export function categoryLabel(category: CategoryId) {

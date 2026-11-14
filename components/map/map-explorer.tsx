@@ -5,11 +5,7 @@ import dynamic from "next/dynamic";
 import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import {
-  categoryColor,
-  categoryLabel,
-  milesBetween,
-} from "@/lib/map/categories";
+import { categoryColor, milesBetween } from "@/lib/map/categories";
 import {
   CATEGORIES,
   type CategoryId,
@@ -95,7 +91,7 @@ export function MapExplorer({ data }: { data: PlaceCollection }) {
     <div className="flex flex-col gap-stack">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <fieldset className="flex flex-wrap gap-2">
-          <legend className="sr-only">Filter by category</legend>
+          <legend className="sr-only">Filter by weather</legend>
           {filters.map((item) => (
             <Button
               key={item.id}
@@ -145,12 +141,14 @@ export function MapExplorer({ data }: { data: PlaceCollection }) {
 
         <div className="order-2 flex flex-col gap-2 lg:order-1 lg:max-h-[36rem] lg:overflow-y-auto lg:pr-1">
           <p className="text-sm text-muted-foreground" aria-live="polite">
-            {visible.length} {visible.length === 1 ? "place" : "places"}
+            {visible.length}{" "}
+            {visible.length === 1 ? "neighborhood" : "neighborhoods"}
             {userLocation ? ", nearest first" : ""}
           </p>
           <ul className="flex flex-col gap-2">
             {visible.map((place) => {
-              const { id, name, category, neighborhood } = place.properties;
+              const { id, name, category, description, temperature } =
+                place.properties;
               const active = selection?.id === id;
               const miles = userLocation
                 ? milesBetween(userLocation, place.geometry.coordinates)
@@ -175,7 +173,7 @@ export function MapExplorer({ data }: { data: PlaceCollection }) {
                     <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                       <span className="font-medium">{name}</span>
                       <span className="text-xs text-muted-foreground">
-                        {categoryLabel(category)} · {neighborhood}
+                        {temperature}°F · {description}
                       </span>
                     </span>
                     {miles !== null ? (

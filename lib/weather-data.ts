@@ -37,7 +37,7 @@ export type NeighborhoodWeather = {
   coordinates: readonly [number, number];
   /** °F */
   temperature: number;
-  /** Inches in the last 15 minutes (rain + showers + snow). */
+  /** Inches of rain, showers and snow in Open-Meteo's latest reading interval (about 15 minutes). */
   precipitation: number;
   /** mph, 10 m above the ground */
   wind: number;
