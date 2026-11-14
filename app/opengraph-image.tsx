@@ -8,13 +8,14 @@ export const alt = `${site.name}: ${site.tagline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const wordmark = await readFile(
-  join(process.cwd(), "public/brand/chitech-cllct-wordmark-v2.png"),
-);
-const wordmarkSrc = `data:image/png;base64,${wordmark.toString("base64")}`;
-
 /** The social preview image, generated at build time from lib/site.ts. */
 export default async function Image() {
+  // Read inside the function, not at import time: pages import this module for its metadata
+  // (alt, size), and on Cloudflare Workers there is no project folder to read from at runtime.
+  const wordmark = await readFile(
+    join(process.cwd(), "public/brand/chitech-cllct-wordmark-v2.png"),
+  );
+  const wordmarkSrc = `data:image/png;base64,${wordmark.toString("base64")}`;
   return new ImageResponse(
     <div
       style={{

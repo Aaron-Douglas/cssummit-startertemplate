@@ -204,9 +204,28 @@ Deploy early, then keep deploying. A live URL is part of your submission.
 4. In **Settings → Environment Variables**, add the same variables you have in `.env.local`. Redeploy.
 5. Using Supabase sign-in? Add your Vercel URL under **Authentication → URL Configuration** in Supabase.
 
+## Deploy to your own Cloudflare
+
+Cloudflare Workers is the other option (the free plan is enough). You deploy from your own computer with Cloudflare's `wrangler` tool, which comes with this project. The app is built for Workers by the [OpenNext adapter](https://opennext.js.org/cloudflare); the settings are in `wrangler.jsonc` and `open-next.config.ts`.
+
+1. Run `pnpm verify`. It must pass.
+2. Sign in to **your own** Cloudflare account (create a free one at [dash.cloudflare.com](https://dash.cloudflare.com/sign-up) if needed): `pnpm exec wrangler login`. It opens your browser. Check who you are signed in as with `pnpm exec wrangler whoami`.
+3. Pick a name for your worker: change `"name"` in `wrangler.jsonc` (and the `"service"` line below it to the same name). The name becomes your URL.
+4. Deploy: `pnpm cf:deploy`. It builds the app and prints your URL, `https://<name>.<your-subdomain>.workers.dev`. If your account has no `workers.dev` subdomain yet, wrangler asks you to pick one.
+5. Server-only keys (no `NEXT_PUBLIC_`), for example the chatbot's key: `pnpm exec wrangler secret put ANTHROPIC_API_KEY`, then paste the value when it asks. It goes straight to Cloudflare, never into the repo. Do the same for `ANTHROPIC_MODEL` or `SUPABASE_SECRET_KEY` if you use them. They take effect straight away, no rebuild.
+6. `NEXT_PUBLIC_` values (Supabase URL and publishable key, `NEXT_PUBLIC_AUTH_GOOGLE_ENABLED`, `NEXT_PUBLIC_DESIGN_SWITCHER`, `NEXT_PUBLIC_SITE_URL`) are **baked in when you build**, so `wrangler secret put` does not change them. Put them in `.env.local` before you run `pnpm cf:deploy`, and run it again after you change one. Set `NEXT_PUBLIC_SITE_URL` to your `workers.dev` URL so share cards point at it.
+7. Using Supabase sign-in? Add your `workers.dev` URL under **Authentication → URL Configuration** in Supabase.
+
+Good to know:
+
+- `pnpm cf:build` then `pnpm cf:preview` runs the Cloudflare build on your computer at http://localhost:8787 before you deploy.
+- The Cloudflare build turns off Next's `cacheComponents` (partial prerendering) because the adapter cannot run it on Workers yet; `next.config.ts` explains. Pages look and behave the same; pages with a loading state are rendered on each request instead of from a saved shell. Write your code as usual: `pnpm verify` still checks it with `cacheComponents` on.
+- The build also copies the values in `.env.local` into the worker it uploads (only to your Cloudflare account, never to git). Prefer `wrangler secret put` for keys anyway, so you can change them without rebuilding.
+- **Windows:** this project's `.npmrc` sets `node-linker=hoisted` so the Cloudflare build can run on Windows without admin rights. If `pnpm cf:build` still fails with `EPERM: operation not permitted, symlink`, turn on **Developer Mode** (Windows Settings → System → For developers) or build in WSL.
+
 ## Submission checklist
 
-- [ ] Your Vercel URL opens and the main pages work.
+- [ ] Your live URL (Vercel or Cloudflare) opens and the main pages work.
 - [ ] `pnpm verify` passes.
 - [ ] No passwords, API keys or tokens anywhere in the repo. `.env.local` is not committed. (Check with `git status` before you push.)
 - [ ] The home page says who the project is for and what problem it solves.
@@ -220,6 +239,9 @@ Deploy early, then keep deploying. A live URL is part of your submission.
 | `pnpm dev` | Start the dev server at http://localhost:3000 |
 | `pnpm verify` | Lint and format check (Biome), route types, typecheck, then the production build |
 | `pnpm build` | Production build only (what Vercel runs) |
+| `pnpm cf:build` | Build for Cloudflare Workers (into `.open-next/`) |
+| `pnpm cf:preview` | Run that Cloudflare build locally at http://localhost:8787 |
+| `pnpm cf:deploy` | Build and deploy to your own Cloudflare account |
 | `pnpm start-project` | First-run wizard: name, kit, design (`--help` for flags) |
 | `pnpm kit list` | Show kits |
 | `pnpm kit add <name>` | Add a kit |
@@ -247,9 +269,18 @@ AGENTS.md, CLAUDE.md    Instructions for Claude Code and other AI coding tools.
 
 ## Demo deployment (maintainers)
 
-The public demo shows every kit and the design switcher. It is built from this repo as-is:
+The public demo shows every kit and the design switcher, and runs on Cloudflare Workers as the worker `cssummit-starter-template`. Deploy it from a clean checkout of `main`, signed in to the organisers' Cloudflare account:
 
-- Build command: `pnpm build:demo` (runs `pnpm kit add --all`, which copies every kit and `pnpm add`s their packages, then `next build`). Vercel's normal frozen-lockfile install runs first; the build step then adds the kit packages. It never prompts, so it works in CI.
-- Environment variable: `NEXT_PUBLIC_DESIGN_SWITCHER=true`. Nothing else: the `app` and `chatbot` kits run in demo mode.
+```bash
+pnpm install --frozen-lockfile
+pnpm exec wrangler login          # once per machine; check with: pnpm exec wrangler whoami
+pnpm cf:deploy:demo
+git checkout -- . && git clean -fd   # undo the kits it added (removes untracked files; git-ignored ones like .env.local stay)
+```
 
-Learners' projects keep the normal `pnpm build`. Don't commit the result of `pnpm kit add --all` back to the template.
+- `pnpm cf:deploy:demo` runs `pnpm cf:build:demo` (`scripts/cf-build.mjs`: `pnpm kit add --all`, then the OpenNext build with `NEXT_PUBLIC_DESIGN_SWITCHER=true`), then `opennextjs-cloudflare deploy`. It never prompts, so it works in CI. Build it from a checkout with **no** `.env.local`: the `app` and `chatbot` kits then run in demo mode, and nothing secret is bundled. To preview first: `pnpm cf:build:demo && pnpm cf:preview`.
+- Optional: `NEXT_PUBLIC_SITE_URL=https://<the workers.dev URL>` in the build environment, so share cards use the real URL.
+
+The Vercel build still works and is kept as an option: build command `pnpm build:demo` (`pnpm kit add --all`, then `next build`) with the environment variable `NEXT_PUBLIC_DESIGN_SWITCHER=true`. Vercel's normal frozen-lockfile install runs first; the build step then adds the kit packages.
+
+Learners' projects keep the normal `pnpm build` / `pnpm cf:build`. Don't commit the result of `pnpm kit add --all` back to the template.
