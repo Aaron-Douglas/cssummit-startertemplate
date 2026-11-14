@@ -1,8 +1,9 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { demoReplyFor, streamDemoReply } from "@/lib/chatbot/demo";
 import { type ChatStreamEvent, chatRequestSchema } from "@/lib/chatbot/schema";
-import { SYSTEM_PROMPT } from "@/lib/chatbot/system-prompt";
+import { buildSystemPrompt } from "@/lib/chatbot/system-prompt";
 import { serverEnv } from "@/lib/env";
+import { getChicagoWeather } from "@/lib/weather";
 
 /**
  * POST /api/chat: takes the conversation so far, streams the next assistant reply back as
@@ -50,12 +51,17 @@ export async function POST(request: Request): Promise<Response> {
     });
   }
 
+  // The current weather goes into the system prompt, so the bot answers from real readings.
+  // getChicagoWeather() never throws: if live weather is down it returns labelled sample data,
+  // and the prompt tells the bot to say so.
+  const weather = await getChicagoWeather();
+
   const client = new Anthropic({ apiKey: anthropicApiKey });
   const stream = client.messages.stream(
     {
       model: anthropicModel ?? DEFAULT_MODEL,
       max_tokens: MAX_TOKENS,
-      system: SYSTEM_PROMPT,
+      system: buildSystemPrompt(weather),
       // Chat replies don't need deep reasoning: low effort answers faster and costs less.
       output_config: { effort: "low" },
       messages,

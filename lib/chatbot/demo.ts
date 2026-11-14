@@ -8,35 +8,36 @@ import { STARTER_PROMPTS } from "./system-prompt";
 
 const PREFIX = "[Demo reply, not from Claude]\n\n";
 
-const GENERIC = `${PREFIX}This chatbot is in demo mode, so this is a pre-written answer instead of a real one.
+const GENERIC = `${PREFIX}Storm Watch is in demo mode, so this is a pre-written answer and I can't read the weather for you yet. I won't guess at numbers.
+
+For the current conditions, open the Map page: it shows every neighborhood's temperature, wind and rain.
 
 To get real answers from Claude:
 1. Create an API key on your team's own Anthropic account.
 2. Add it to .env.local as ANTHROPIC_API_KEY=your-key.
 3. Restart pnpm dev and send your message again.
 
-Then edit lib/chatbot/system-prompt.ts to give the bot its own job. The steps are in kits/chatbot/README.md.`;
+The steps are in kits/chatbot/README.md.`;
 
-// These match the example STARTER_PROMPTS. If you change the prompts, unmatched questions get
-// the generic reply above, which is fine.
+// These match STARTER_PROMPTS in system-prompt.ts. If you change the prompts, unmatched
+// questions get the generic reply above, which is fine. They describe what a real answer would
+// do and never quote weather numbers, because a demo reply cannot know today's weather.
 const STARTER_REPLIES = [
-  `${PREFIX}Most street problems, like potholes and streetlights that are out, go through Chicago 311.
+  `${PREFIX}In demo mode I can't see Pilsen's weather, so I won't guess.
 
-1. Call 311, or use the CHI 311 app or website.
-2. Give the exact address or the nearest cross streets.
-3. Save the request number so you can check on it later.
+With a real API key, Storm Watch reads Pilsen's latest reading and answers straight: "Yes, bring an umbrella" if it is raining or showering there, "No" if it is dry, with the time of the reading.
 
-(A real reply from Claude would follow the instructions in lib/chatbot/system-prompt.ts.)`,
-  `${PREFIX}Chicago is split into 50 wards, and each ward elects an alderperson to the City Council.
+For now, open the Map page and tap Pilsen to see its current conditions.`,
+  `${PREFIX}In demo mode I can't compare today's temperatures, so I won't make one up.
 
-Your alderperson votes on city laws and the budget, and their ward office can help with local problems like trash pickup, permits and street repairs.
+With a real API key, Storm Watch looks at the current reading for all eight neighborhoods and names the warmest one, with its temperature and the time of the reading.
 
-To find yours, look up your address on the city's ward map, then call or email the ward office.`,
-  `${PREFIX}During heat emergencies the city opens cooling centers, and public libraries and park field houses are often open as places to cool off.
+For now, the Map page lists every neighborhood with its temperature.`,
+  `${PREFIX}In demo mode I can't check the wind or rain along that route, so I won't guess.
 
-1. Check chicago.gov or call 311 for today's locations and hours.
-2. Bring water and any medicine you need.
-3. If someone shows signs of heat stroke, call 911.`,
+With a real API key, Storm Watch checks the current readings for Hyde Park and the Loop (rain, wind, temperature) and tells you whether it looks like a good ride, with the time of the reading. For thunderstorms or other severe weather it points you to weather.gov/lot.
+
+For now, tap Hyde Park and the Loop on the Map page.`,
 ];
 
 export function demoReplyFor(question: string): string {
