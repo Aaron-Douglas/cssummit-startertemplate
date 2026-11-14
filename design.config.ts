@@ -1,20 +1,20 @@
 import type { DesignConfig } from "@/lib/design";
 
 /**
- * This project's look: one option per axis. Matches the "summit" preset.
+ * This project's look: one option per axis. Matches the "soft" preset.
  * Options are listed in lib/design.ts (AXES). Preview combinations with the design switcher
  * (bottom-right corner in development), then paste its "Copy config" output here.
  */
 const design: DesignConfig = {
-  preset: "summit",
-  shape: "round",
-  buttons: "offset",
-  surface: "raised",
+  preset: "soft",
+  shape: "pill",
+  buttons: "solid",
+  surface: "glass",
   type: "geist",
-  layout: "split",
-  nav: "bar",
-  density: "comfortable",
-  accent: "orange",
+  layout: "centered",
+  nav: "floating",
+  density: "spacious",
+  accent: "teal",
 };
 
 export default design;

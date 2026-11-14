@@ -27,9 +27,9 @@ function kitNav(): NavLink[] {
 }
 
 export const site = {
-  name: "Black CS Success Summit",
+  name: "Storm Watch",
   shortName: "CS Summit",
-  tagline: "Build something real this weekend.",
+  tagline: "Live Chicago weather, three ways.",
   description:
     "A hackathon starter for the Black CS Success Summit: Next.js, a switchable design system, opt-in kits and Claude Code, ready on the first run.",
   /** Small print under the wordmark. */

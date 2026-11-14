@@ -1,1 +1,31 @@
-{ "installed": [] }
+{
+  "installed": [
+    {
+      "name": "map",
+      "nav": [
+        {
+          "label": "Map",
+          "href": "/map"
+        }
+      ]
+    },
+    {
+      "name": "chatbot",
+      "nav": [
+        {
+          "label": "Chat",
+          "href": "/chat"
+        }
+      ]
+    },
+    {
+      "name": "game",
+      "nav": [
+        {
+          "label": "Play",
+          "href": "/play"
+        }
+      ]
+    }
+  ]
+}
