@@ -1,0 +1,10 @@
+{
+  "name": "map",
+  "title": "Map",
+  "description": "A /map page of Chicago with markers, popups, a synced list, filters and \"use my location\". Free tiles, no API key.",
+  "dependencies": { "maplibre-gl": "^6.18.0" },
+  "devDependencies": {},
+  "env": [],
+  "nav": [{ "label": "Map", "href": "/map" }],
+  "next": "Open /map, then replace the sample places in lib/map/places.ts with your own (coordinates are [longitude, latitude]). Keep the map attribution visible."
+}

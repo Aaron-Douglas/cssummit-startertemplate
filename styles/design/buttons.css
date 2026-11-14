@@ -1,0 +1,90 @@
+/* buttons: fill, border, shadow, hover and press motion of every button.
+   Tokens: --btn-* (read by the btn / btn-primary / btn-alt utilities in app/globals.css).
+   Colours come from the accent axis (--primary*), so any accent works with any button. */
+
+:root,
+:root[data-buttons="offset"] {
+  /* The summit signature: accent fill, offset shadow in the companion colour. */
+  --btn-font: var(--font-body);
+  --btn-weight: 700;
+  --btn-transform: none;
+  --btn-tracking: 0;
+  --btn-border-width: 2px;
+  --btn-bg: var(--primary);
+  --btn-bg-hover: var(--primary);
+  --btn-fg: var(--primary-foreground);
+  --btn-border: var(--primary);
+  --btn-shadow: 4px 4px 0 var(--primary-shadow);
+  --btn-shadow-hover: 7px 7px 0 var(--primary-shadow);
+  --btn-shadow-active: 0 0 0 var(--primary-shadow);
+  --btn-hover-translate: -2px -2px;
+  --btn-active-translate: 2px 2px;
+  --btn-alt-shadow: none;
+  --btn-alt-shadow-hover: none;
+  --btn-alt-hover-translate: 0 0;
+}
+
+:root[data-buttons="solid"] {
+  --btn-weight: 600;
+  --btn-border-width: 0px;
+  --btn-bg-hover: color-mix(in oklab, var(--primary) 82%, white);
+  --btn-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+  --btn-shadow-hover: 0 6px 16px -6px rgb(0 0 0 / 0.6);
+  --btn-shadow-active: none;
+  --btn-hover-translate: 0 -1px;
+  --btn-active-translate: 0 1px;
+}
+
+:root[data-buttons="outline"] {
+  --btn-weight: 600;
+  --btn-tracking: 0.01em;
+  --btn-border-width: 2px;
+  --btn-bg: transparent;
+  --btn-bg-hover: var(--primary-tint);
+  --btn-fg: var(--primary-text);
+  --btn-shadow: none;
+  --btn-shadow-hover: none;
+  --btn-shadow-active: none;
+  --btn-hover-translate: 0 0;
+  --btn-active-translate: 0 1px;
+}
+
+:root[data-buttons="glow"] {
+  --btn-weight: 600;
+  --btn-border-width: 1px;
+  --btn-bg: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--primary) 85%, white),
+    var(--primary)
+  );
+  --btn-bg-hover: var(--btn-bg);
+  --btn-border: color-mix(in oklab, var(--primary) 60%, white);
+  --btn-shadow:
+    0 0 0 3px color-mix(in oklab, var(--primary) 30%, transparent),
+    0 0 32px 2px color-mix(in oklab, var(--primary) 55%, transparent);
+  --btn-shadow-hover:
+    0 0 0 5px color-mix(in oklab, var(--primary) 30%, transparent),
+    0 0 52px 8px color-mix(in oklab, var(--primary) 70%, transparent);
+  --btn-shadow-active: 0 0 18px 0 var(--primary);
+  --btn-hover-translate: 0 -2px;
+  --btn-active-translate: 0 0;
+  --btn-alt-shadow: 0 0 24px -6px var(--primary);
+  --btn-alt-shadow-hover: 0 0 32px -2px var(--primary);
+}
+
+:root[data-buttons="brutal"] {
+  --btn-font: var(--font-code);
+  --btn-weight: 700;
+  --btn-transform: uppercase;
+  --btn-tracking: 0.06em;
+  --btn-border-width: 3px;
+  --btn-border: var(--foreground);
+  --btn-shadow: 6px 6px 0 var(--foreground);
+  --btn-shadow-hover: 9px 9px 0 var(--foreground);
+  --btn-shadow-active: 0 0 0 var(--foreground);
+  --btn-hover-translate: -3px -3px;
+  --btn-active-translate: 6px 6px;
+  --btn-alt-shadow: 4px 4px 0 var(--foreground);
+  --btn-alt-shadow-hover: 6px 6px 0 var(--foreground);
+  --btn-alt-hover-translate: -2px -2px;
+}

@@ -1,0 +1,10 @@
+{
+  "name": "game",
+  "title": "Game",
+  "description": "Rain Barrel: a small canvas game (catch the rain, dodge the hail) built to be reshaped. Keyboard, touch, local high scores.",
+  "dependencies": {},
+  "devDependencies": {},
+  "env": [],
+  "nav": [{ "label": "Play", "href": "/play" }],
+  "next": "Open lib/game/config.ts and change a number (speeds, spawn rates, points), then play again at /play. The rules are in lib/game/world.ts and the drawing in lib/game/render.ts."
+}

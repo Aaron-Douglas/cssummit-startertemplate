@@ -1,0 +1,59 @@
+/* accent: which summit colour is primary. Each option defines its own contrast-safe
+   foreground (text on a primary fill), a text colour that passes 4.5:1 on the page and cards,
+   a tint for soft backgrounds, and a companion colour for offset shadows.
+   It also reorders the chart palette so --chart-1 (the first series) is the accent and the
+   other four stay distinct from it.
+   Tokens: --primary, --primary-foreground, --primary-text, --primary-tint, --primary-shadow,
+   --chart-1 ... --chart-5. */
+
+:root[data-accent="orange"] {
+  --primary: var(--brand-orange);
+  --primary-foreground: var(--brand-on-fill);
+  --primary-text: var(--brand-orange-text);
+  --primary-tint: var(--brand-tint-orange);
+  --primary-shadow: var(--brand-teal);
+  --chart-1: var(--brand-orange);
+  --chart-2: var(--brand-teal);
+  --chart-3: var(--brand-green);
+  --chart-4: var(--brand-yellow);
+  --chart-5: var(--brand-muted);
+}
+
+:root[data-accent="teal"] {
+  --primary: var(--brand-teal);
+  --primary-foreground: var(--brand-on-fill);
+  --primary-text: var(--brand-teal-text);
+  --primary-tint: var(--brand-tint-teal);
+  --primary-shadow: var(--brand-orange);
+  --chart-1: var(--brand-teal);
+  --chart-2: var(--brand-orange);
+  --chart-3: var(--brand-yellow);
+  --chart-4: var(--brand-green);
+  --chart-5: var(--brand-muted);
+}
+
+:root[data-accent="green"] {
+  --primary: var(--brand-green);
+  --primary-foreground: var(--brand-on-fill);
+  --primary-text: var(--brand-green-text);
+  --primary-tint: var(--brand-tint-green);
+  --primary-shadow: var(--brand-yellow);
+  --chart-1: var(--brand-green);
+  --chart-2: var(--brand-yellow);
+  --chart-3: var(--brand-orange);
+  --chart-4: var(--brand-teal);
+  --chart-5: var(--brand-muted);
+}
+
+:root[data-accent="yellow"] {
+  --primary: var(--brand-yellow);
+  --primary-foreground: var(--brand-on-fill);
+  --primary-text: var(--brand-yellow-text);
+  --primary-tint: var(--brand-tint-yellow);
+  --primary-shadow: var(--brand-teal);
+  --chart-1: var(--brand-yellow);
+  --chart-2: var(--brand-teal);
+  --chart-3: var(--brand-orange);
+  --chart-4: var(--brand-green);
+  --chart-5: var(--brand-muted);
+}

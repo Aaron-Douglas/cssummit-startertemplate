@@ -1,0 +1,14 @@
+{
+  "name": "website",
+  "title": "Website pages",
+  "description": "About (mission, team, FAQ), Contact (validated form) and Updates (simple posts). No setup.",
+  "dependencies": {},
+  "devDependencies": {},
+  "env": [],
+  "nav": [
+    { "label": "About", "href": "/about" },
+    { "label": "Updates", "href": "/updates" },
+    { "label": "Contact", "href": "/contact" }
+  ],
+  "next": "Edit the mission, team and FAQ at the top of app/about/page.tsx, then copy a file in content/updates/ to post your first update (add it to content/updates/index.ts)."
+}

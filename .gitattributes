@@ -1,0 +1,4 @@
+# Keep LF line endings on every platform so Biome formatting checks pass on Windows.
+* text=auto eol=lf
+*.png binary
+*.ico binary
