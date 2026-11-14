@@ -12,7 +12,7 @@ import type * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { HighScoreTable } from "@/components/game/high-score-table";
 import { Button } from "@/components/ui/button";
-import { config } from "@/lib/game/config";
+import { config, defaultTuning, type Tuning } from "@/lib/game/config";
 import {
   createInput,
   createLoop,
@@ -44,8 +44,11 @@ const START_HUD: Hud = {
  * The game screen: canvas, score bar, overlays (start, paused, game over) and touch buttons.
  * The engine (lib/game/engine.ts) runs the loop, lib/game/world.ts holds the rules and
  * lib/game/render.ts draws. This component wires them together and handles the screens.
+ *
+ * `tuning` is today's weather (from lib/game/storm.ts, worked out on the server). Leave it out
+ * for the normal game in lib/game/config.ts.
  */
-export function Game() {
+export function Game({ tuning = defaultTuning }: { tuning?: Tuning }) {
   const stageRef = useRef<HTMLElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -58,6 +61,8 @@ export function Game() {
   // Things the loop reads every frame live in refs, so changing them doesn't restart it.
   const statusRef = useRef<Status>("ready");
   const reducedMotionRef = useRef(reducedMotion);
+  // The weather is fixed for the whole visit, so the first value is all we need.
+  const tuningRef = useRef(tuning);
   const game = useRef<{
     loop: Loop;
     input: Input;
@@ -82,7 +87,7 @@ export function Game() {
     let scale = 1;
     let lastHud = START_HUD;
     const input = createInput(canvas);
-    const state = { world: createWorld() };
+    const state = { world: createWorld(tuningRef.current) };
 
     const draw = () => {
       ctx.setTransform(scale, 0, 0, scale, 0, 0);
@@ -183,7 +188,7 @@ export function Game() {
   const start = useCallback(() => {
     const current = game.current;
     if (!current) return;
-    current.world = createWorld();
+    current.world = createWorld(tuningRef.current);
     setHud(START_HUD);
     setResult(undefined);
     setAnnouncement("Game started.");
@@ -326,8 +331,8 @@ export function Game() {
             <p className="eyebrow">Summer storm</p>
             <h2 className="text-3xl sm:text-4xl">Rain Barrel</h2>
             <p className="text-pretty text-muted-foreground">
-              Catch raindrops for the community garden. Golden drops are worth
-              more. Dodge the hail. Fill the barrel for a bonus.
+              Catch {tuning.dropLabel}s for the community garden. Golden drops
+              are worth more. Dodge the hail. Fill the barrel for a bonus.
             </p>
             <Button type="button" size="lg" onClick={start}>
               <PlayIcon />

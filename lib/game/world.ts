@@ -1,4 +1,9 @@
-import { config, type ItemKind } from "@/lib/game/config";
+import {
+  config,
+  defaultTuning,
+  type ItemKind,
+  type Tuning,
+} from "@/lib/game/config";
 
 /**
  * The rules of the game. `createWorld()` makes a fresh game and `stepWorld()` moves it forward
@@ -52,6 +57,8 @@ export type World = {
   nextId: number;
   over: boolean;
   events: GameEvent[];
+  /** Spawn rates, falling speeds and item mix for this game (today's weather). */
+  tuning: Tuning;
 };
 
 export type StepInput = {
@@ -69,7 +76,8 @@ export type StepOptions = {
 
 const { world: size, player } = config;
 
-export function createWorld(): World {
+/** A fresh game. Pass a `tuning` to change the weather (see lib/game/storm.ts). */
+export function createWorld(tuning: Tuning = defaultTuning): World {
   return {
     time: 0,
     score: 0,
@@ -85,6 +93,7 @@ export function createWorld(): World {
     nextId: 1,
     over: false,
     events: [],
+    tuning,
   };
 }
 
@@ -101,25 +110,26 @@ export function playerTop(): number {
   return size.height - player.bottomMargin - player.height;
 }
 
-function pickKind(random: () => number): ItemKind {
+function pickKind(weights: Tuning["weights"], random: () => number): ItemKind {
   const kinds = Object.keys(config.items) as ItemKind[];
-  const total = kinds.reduce((sum, kind) => sum + config.items[kind].weight, 0);
+  const total = kinds.reduce((sum, kind) => sum + weights[kind], 0);
   let roll = random() * total;
   for (const kind of kinds) {
-    roll -= config.items[kind].weight;
+    roll -= weights[kind];
     if (roll < 0) return kind;
   }
   return kinds[0];
 }
 
 function spawn(world: World, random: () => number) {
-  const kind = pickKind(random);
+  const { fall, weights } = world.tuning;
+  const kind = pickKind(weights, random);
   const radius = config.items[kind].radius;
   const base = Math.min(
-    config.fall.maxSpeed,
-    config.fall.startSpeed + world.time * config.fall.growPerSecond,
+    fall.maxSpeed,
+    fall.startSpeed + world.time * fall.growPerSecond,
   );
-  const variation = 1 + (random() * 2 - 1) * config.fall.variation;
+  const variation = 1 + (random() * 2 - 1) * fall.variation;
   world.items.push({
     id: world.nextId++,
     kind,
@@ -190,9 +200,10 @@ export function stepWorld(
   world.spawnTimer -= dt;
   if (world.spawnTimer <= 0) {
     spawn(world, random);
+    const { spawn: rate } = world.tuning;
     world.spawnTimer = Math.max(
-      config.spawn.minInterval,
-      config.spawn.startInterval - world.time * config.spawn.shrinkPerSecond,
+      rate.minInterval,
+      rate.startInterval - world.time * rate.shrinkPerSecond,
     );
   }
 

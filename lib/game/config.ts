@@ -60,3 +60,37 @@ export const config = {
 } as const;
 
 export type ItemKind = keyof typeof config.items;
+
+/**
+ * The parts of `config` that today's weather can change (lib/game/storm.ts works them out
+ * on the server). Each new game reads these from the world instead of from `config`.
+ */
+export type Tuning = {
+  /** What the drops are called on screen: "raindrop", or "snowflake" when it is snowing. */
+  dropLabel: string;
+  /** How often each item appears, like `weight` in `config.items`. */
+  weights: Record<ItemKind, number>;
+  spawn: {
+    startInterval: number;
+    minInterval: number;
+    shrinkPerSecond: number;
+  };
+  fall: {
+    startSpeed: number;
+    maxSpeed: number;
+    growPerSecond: number;
+    variation: number;
+  };
+};
+
+/** The game exactly as `config` describes it, with no weather applied. */
+export const defaultTuning: Tuning = {
+  dropLabel: "raindrop",
+  weights: {
+    drop: config.items.drop.weight,
+    golden: config.items.golden.weight,
+    hail: config.items.hail.weight,
+  },
+  spawn: { ...config.spawn },
+  fall: { ...config.fall },
+};
